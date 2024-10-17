@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# To use this code you basically type ./mergeSort.sh 5 6 7 19 2 1 19 23 5
+# Basically ./mergeSort ARRAY WITH SPACES
+
+
 merge_sort() {
     array=("$@")
     length=${#array[@]}
@@ -10,16 +14,12 @@ merge_sort() {
         return
     fi
 
-    echo "$(merge "${array[@]}")"
-}
 
-
-
-merge() {
     result=()
     middlePoint=$((length / 2))
     left=($(merge_sort "${array[@]:0:middlePoint}"))  # We have to put () for it to be treated as an array
     right=($(merge_sort "${array[@]:middlePoint}"))
+
     while [[ ${#left[@]} -ne 0 && ${#right[@]} -ne 0 ]]; do
         if (( ${left[0]} <= ${right[0]} )); then
             result+=(${left[0]})
