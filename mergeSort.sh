@@ -4,41 +4,42 @@ merge_sort() {
     array=("$@")
     length=${#array[@]}
 
-    if (( length -le 1))
+    if (( length <= 1)); 
     then
         echo $array
+        return
     fi
 
-    middlePoint=$(($length / 2))
-    left=merge_sort "${array[@]:0:middlePoint}"
-    right=merge_sort "${my_array[@]:middlePoint}"
-    echo "$(merge "${left[@]}" "${right[@]}")"
+    echo "$(merge "${array[@]}")"
 }
 
 
 
 merge() {
     result=()
-    local left=("$@")  
-    local right=("$@") 
+    middlePoint=$((length / 2))
+    left=($(merge_sort "${array[@]:0:middlePoint}"))  # We have to put () for it to be treated as an array
+    right=($(merge_sort "${array[@]:middlePoint}"))
     while [[ ${#left[@]} -ne 0 && ${#right[@]} -ne 0 ]]; do
-        if (( ${left[0]} -le ${right[0]} )); then
+        if (( ${left[0]} <= ${right[0]} )); then
             result+=(${left[0]})
-            shift left
+            left=("${left[@]:1}")
         else
             result+=(${right[0]})
-            shift right
+            right=("${right[@]:1}")
         fi
     done
-    while [[ ${#left[@]} -ne 0]]; do
+    while [[ ${#left[@]} -ne 0 ]]; do
         result+=(${left[0]})
-        shift left
+        left=("${left[@]:1}")
     done
-    while [[ ${#right[@]} -ne 0]]; do
+    while [[ ${#right[@]} -ne 0 ]]; do
         result+=(${right[0]})
-        shift left
+        right=("${right[@]:1}")
     done
 
 
-    echo "${merged_array[@]}"  
-}
+    echo "${result[@]}"  
+} 
+
+merge_sort "$@"
